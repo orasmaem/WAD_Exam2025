@@ -4,7 +4,6 @@
 
 
 <div class="container">
-  <!-- delete from here -->
   <!-- Table go here -->
 
   </div>
