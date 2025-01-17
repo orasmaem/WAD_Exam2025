@@ -19,10 +19,17 @@
             <td>{{ grade.studentlevel }}</td>
             <td>{{ grade.hws }}</td>
             <td>{{ grade.exam }}</td>
-            <td :class="getResult(grade)">{{ grade.final }}</td>
+            <td :class="getResult(grade)" @click="showFeedback(grade.examfeedback)">
+              {{ grade.final }}
+            </td>
           </tr>
         </tbody>
       </table>
+      <div v-if="selectedDescription" class="description-container">
+        <p>
+          <strong>Exam feedback:</strong> {{ selectedDescription }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -33,6 +40,7 @@ export default {
   data() {
     return {
       grades: [],
+      selectedDescription: null, 
     };
   },
   methods: {
@@ -47,6 +55,9 @@ export default {
         return "fail";
       }
       return "pass";
+    },
+    showFeedback(feedback) {
+      this.selectedDescription = feedback; 
     },
   },
   mounted() {
@@ -65,7 +76,8 @@ export default {
   margin: auto;
   width: 90%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 table {
@@ -89,16 +101,27 @@ tbody td {
   border: 1px solid #cbd5e0;
 }
 
-
 .fail {
-  background-color: #e53e3e; 
+  background-color: #ff0000;
   color: white;
   font-weight: bold;
 }
 
 .pass {
-  background-color: #48bb78; 
+  background-color: #35e07c;
   color: white;
   font-weight: bold;
+}
+
+.description-container {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ff9efa; 
+  color: #2d3748;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 </style>
