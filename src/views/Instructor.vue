@@ -19,7 +19,16 @@
             <td><input name="studentcode" type="text" id="studentcode" required v-model="grade.studentcode" readonly></td>
             <td><input name="studentlevel" type="text" id="studentlevel" required v-model="grade.studentlevel" readonly></td>
             <td><input name="hws" type="number" id="hws" required v-model="grade.hws" @input="updateFinalGrade(grade)"></td>
-            <td><input name="exam" type="number" id="exam" required v-model="grade.exam" @input="updateFinalGrade(grade)"></td>
+            <td>
+              <input
+                name="exam"
+                type="number"
+                id="exam"
+                required
+                v-model="grade.exam"
+                @input="resetExamFeedback(grade)"
+              />
+            </td>
             <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback"></td>
             <td :class="'final-grade-cell'"><input name="final" type="number" id="final" required v-model="grade.final" readonly></td>
             <td><button @click="updateGrade(grade)">Update</button></td>
@@ -52,6 +61,10 @@ export default {
     },
     updateFinalGrade(grade) {
       grade.final = grade.hws + grade.exam; 
+    },
+    resetExamFeedback(grade) {
+      grade.examfeedback = ""; 
+      this.updateFinalGrade(grade); 
     },
     updateGrade(grade) {
       fetch(`http://localhost:3000/api/grades/${grade.id}`, {
@@ -115,7 +128,6 @@ button {
 button:hover {
   background-color: #5a6bf1;
 }
-
 
 .final-grade-cell input {
   background-color: #d6d6f8;
