@@ -19,7 +19,7 @@
             <td>{{ grade.studentlevel }}</td>
             <td>{{ grade.hws }}</td>
             <td>{{ grade.exam }}</td>
-            <td>{{ grade.final }}</td>
+            <td :class="getResult(grade)">{{ grade.final }}</td>
           </tr>
         </tbody>
       </table>
@@ -41,6 +41,12 @@ export default {
         .then((response) => response.json())
         .then((data) => (this.grades = data))
         .catch((err) => console.log(err.message));
+    },
+    getResult(grade) {
+      if (grade.hws <= 20 || grade.exam <= 20 || grade.final <= 50) {
+        return "fail";
+      }
+      return "pass";
     },
   },
   mounted() {
@@ -84,6 +90,15 @@ tbody td {
 }
 
 
+.fail {
+  background-color: #e53e3e; 
+  color: white;
+  font-weight: bold;
+}
 
-
+.pass {
+  background-color: #48bb78; 
+  color: white;
+  font-weight: bold;
+}
 </style>
