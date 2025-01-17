@@ -1,9 +1,9 @@
 <template>
   <div>
-  <h1>Instructor Management Pannel</h1>
-  <div class="container">
-          <table>
-          <thead>
+    <h1>Instructor Management Panel</h1>
+    <div class="container">
+      <table>
+        <thead>
           <tr>
             <th>St. Code</th>
             <th>St. Level</th>
@@ -12,22 +12,21 @@
             <th>Exam feedback</th>
             <th>Final grade</th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           <tr class="item" v-for="grade in grades" :key="grade.id">
-            <td><input name="studentcode" type="text" id="studentcode" required v-model="grade.studentcode" readonly></td>
-            <td><input name="studentlevel" type="text" id="studentlevel" required v-model="grade.studentlevel" readonly></td>
-            <td><input name="hws" type="number" id="hws"  required  v-model="grade.hws"></td>
-            <td><input name="exam" type="number" id="exam"  required v-model="grade.exam "></td>
-            <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback"></td>
-            <td><input name="final" type="number" id="final" required v-model="grade.final "></td> 
+            <td><input name="studentcode" type="text" id="studentcode" required v-model="grade.studentcode" readonly /></td>
+            <td><input name="studentlevel" type="text" id="studentlevel" required v-model="grade.studentlevel" readonly /></td>
+            <td><input name="hws" type="number" id="hws" required v-model="grade.hws" @input="updateFinalGrade(grade)" /></td>
+            <td><input name="exam" type="number" id="exam" required v-model="grade.exam" @input="updateFinalGrade(grade)" /></td>
+            <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback" /></td>
+            <td><input name="final" type="number" id="final" required v-model="grade.final" readonly class="final-grade" /></td>
           </tr>
-          </tbody>
-          </table>
+        </tbody>
+      </table>
     </div>
-  </div> 
+  </div>
 </template>
-
 
 <script>
 export default {
@@ -41,14 +40,21 @@ export default {
     fetchRecords() {
       fetch(`http://localhost:3000/api/grades`)
         .then((response) => response.json())
-        .then((data) => (this.grades = data))
+        .then((data) => {
+          this.grades = data.map((grade) => ({
+            ...grade,
+            final: grade.hws + grade.exam,
+          }));
+        })
         .catch((err) => console.log(err.message));
-  },
+    },
+    updateFinalGrade(grade) {
+      grade.final = grade.hws + grade.exam; 
+    },
   },
   mounted() {
     this.fetchRecords();
-    console.log("mounted");
-  } 
+  },
 };
 </script>
 
@@ -64,10 +70,16 @@ export default {
   border-radius: 20px;
   display: flex;
   justify-content: center;
-  
 }
-input{
+
+input {
   width: 100px;
-  text-align: center
+  text-align: center;
+}
+
+.final-grade {
+  background-color: #d6d6f8;
+  color: #1a202c;
+  font-weight: bold;
 }
 </style>
