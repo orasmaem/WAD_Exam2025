@@ -31,7 +31,7 @@
             </td>
             <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback"></td>
             <td :class="'final-grade-cell'"><input name="final" type="number" id="final" required v-model="grade.final" readonly></td>
-            <td><button @click="updateGrade(grade)">Update</button></td>
+            <td><button :disabled="!grade.examfeedback" @click="updateGrade(grade)">Update</button></td>
           </tr>
         </tbody>
       </table>
@@ -125,9 +125,12 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #5a6bf1;
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
+
+
 
 .final-grade-cell input {
   background-color: #d6d6f8;
