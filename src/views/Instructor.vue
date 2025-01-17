@@ -11,16 +11,18 @@
             <th>Exam</th>
             <th>Exam feedback</th>
             <th>Final grade</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="item" v-for="grade in grades" :key="grade.id">
-            <td><input name="studentcode" type="text" id="studentcode" required v-model="grade.studentcode" readonly /></td>
-            <td><input name="studentlevel" type="text" id="studentlevel" required v-model="grade.studentlevel" readonly /></td>
-            <td><input name="hws" type="number" id="hws" required v-model="grade.hws" @input="updateFinalGrade(grade)" /></td>
-            <td><input name="exam" type="number" id="exam" required v-model="grade.exam" @input="updateFinalGrade(grade)" /></td>
-            <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback" /></td>
-            <td><input name="final" type="number" id="final" required v-model="grade.final" readonly class="final-grade" /></td>
+          <tr v-for="grade in grades" :key="grade.id">
+            <td><input name="studentcode" type="text" id="studentcode" required v-model="grade.studentcode" readonly></td>
+            <td><input name="studentlevel" type="text" id="studentlevel" required v-model="grade.studentlevel" readonly></td>
+            <td><input name="hws" type="number" id="hws" required v-model="grade.hws" @input="updateFinalGrade(grade)"></td>
+            <td><input name="exam" type="number" id="exam" required v-model="grade.exam" @input="updateFinalGrade(grade)"></td>
+            <td><input name="examfeedback" type="textarea" id="examfeedback" required v-model="grade.examfeedback"></td>
+            <td :class="'final-grade-cell'"><input name="final" type="number" id="final" required v-model="grade.final" readonly></td>
+            <td><button @click="updateGrade(grade)">Update</button></td>
           </tr>
         </tbody>
       </table>
@@ -51,6 +53,30 @@ export default {
     updateFinalGrade(grade) {
       grade.final = grade.hws + grade.exam; 
     },
+    updateGrade(grade) {
+      fetch(`http://localhost:3000/api/grades/${grade.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          studentcode: grade.studentcode,
+          studentlevel: grade.studentlevel,
+          hws: grade.hws,
+          exam: grade.exam,
+          examfeedback: grade.examfeedback,
+          final: grade.final,
+        }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Grade updated successfully!");
+          } else {
+            alert("Failed to update grade.");
+          }
+        })
+        .catch((err) => console.log(err.message));
+    },
   },
   mounted() {
     this.fetchRecords();
@@ -77,9 +103,24 @@ input {
   text-align: center;
 }
 
-.final-grade {
+button {
+  background-color: #7f8cfa;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #5a6bf1;
+}
+
+
+.final-grade-cell input {
   background-color: #d6d6f8;
   color: #1a202c;
   font-weight: bold;
+  border: none;
 }
 </style>
