@@ -62,5 +62,28 @@ export default {
   justify-content: center;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  background: #e9ecef;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+thead th {
+  background: #4a5568;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px;
+}
+
+tbody td {
+  background: #edf2f7;
+  padding: 10px;
+  border: 1px solid #cbd5e0;
+}
+
+
+
 
 </style>
